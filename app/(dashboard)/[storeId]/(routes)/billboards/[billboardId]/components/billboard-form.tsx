@@ -1,7 +1,6 @@
 "use client"
 
 import { AlertModal } from "@/components/modals/alert-modal";
-import { ApiAlert } from "@/components/ui/api-alert";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Heading } from "@/components/ui/heading";
@@ -21,7 +20,7 @@ import * as z from "zod";
 
 const formSchema = z.object({
     label: z.string().min(1),
-    imageUrl: z.string().min(1),
+    imageurl: z.string().min(1),
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>; 
@@ -34,7 +33,6 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
 }) => {
     const params = useParams();
     const router = useRouter();
-    const origin = useOrigin();
     
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -48,7 +46,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
         resolver: zodResolver(formSchema),
         defaultValues: initialData || {
             label: "",
-            imageUrl: "",
+            imageurl: "",
         }
     });
 
@@ -61,6 +59,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
                 await axios.post(`/api/${params.storeId}/billboards`, data);
             }
             router.refresh();
+            router.push(`/${params.storeId}/billboards`)
             toast.success(toastMessage);
         } catch (error) {
             toast.error("Something went wrong")
@@ -113,7 +112,7 @@ export const BillboardForm: React.FC<BillboardFormProps> = ({
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full">
                     <FormField
                         control={form.control}
-                        name="imageUrl"
+                        name="imageurl"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Background image</FormLabel>
